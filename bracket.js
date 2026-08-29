@@ -30,10 +30,8 @@ function initBracket(entries) {
 }
 
 function startNewTournament(entries) {
-  const bracketDiv = document.getElementById("bracket");
-
   const shuffled = shuffle(entries.map(e => ({
-    ...e,              // 🔥 keep CSV id
+    ...e,
     status: "none"
   })));
 
@@ -60,7 +58,7 @@ function startNewTournament(entries) {
   CURRENT_ROUNDS = rounds;
 
   buildMatches(CURRENT_ROUNDS);
-  renderBracket(CURRENT_ROUNDS, bracketDiv);
+  renderBracket(CURRENT_ROUNDS, document.getElementById("bracket"));
   saveTournament();
   setupResetButton();
 }
@@ -114,6 +112,8 @@ function renderBracket(rounds, bracketDiv) {
 
   let globalMatchCounter = 1;
 
+  const roundDivs = [];
+
   rounds.forEach((round, rIndex) => {
     const roundDiv = document.createElement("div");
     roundDiv.className = "round";
@@ -126,6 +126,7 @@ function renderBracket(rounds, bracketDiv) {
     round.matches.forEach((match, mIndex) => {
       const matchDiv = document.createElement("div");
       matchDiv.className = "match";
+      matchDiv.dataset.matchIndex = mIndex;
 
       const title = document.createElement("div");
       title.className = "match-title";
@@ -168,7 +169,10 @@ function renderBracket(rounds, bracketDiv) {
     });
 
     bracketDiv.appendChild(roundDiv);
+    roundDivs.push(roundDiv);
   });
+
+  alignMatches(roundDivs);
 
   const finalRound = rounds[rounds.length - 1];
   const winnerEntry = finalRound.entries.find(e => e.status === "winner");
@@ -190,7 +194,7 @@ function renderBracket(rounds, bracketDiv) {
     winnerDiv.appendChild(title);
 
     const img = document.createElement("img");
-    img.src = `${winnerEntry.id}.jpg`;   // 🔥 main folder
+    img.src = `${winnerEntry.id}.jpg`;
     img.className = "entry-image";
     winnerDiv.appendChild(img);
 
@@ -198,6 +202,28 @@ function renderBracket(rounds, bracketDiv) {
   }
 
   bracketDiv.appendChild(winnerRoundDiv);
+}
+
+function alignMatches(roundDivs) {
+  for (let r = 1; r < roundDivs.length; r++) {
+    const prevRound = roundDivs[r - 1];
+    const currRound = roundDivs[r];
+
+    const prevMatches = [...prevRound.querySelectorAll(".match")];
+    const currMatches = [...currRound.querySelectorAll(".match")];
+
+    currMatches.forEach((matchDiv, i) => {
+      const parent1 = prevMatches[i * 2];
+      const parent2 = prevMatches[i * 2 + 1];
+
+      const top1 = parent1.offsetTop;
+      const top2 = parent2.offsetTop;
+
+      const mid = (top1 + top2) / 2;
+
+      matchDiv.style.top = `${mid}px`;
+    });
+  }
 }
 
 function createPlayerDiv(entry, matchDiv, slot) {
@@ -209,7 +235,7 @@ function createPlayerDiv(entry, matchDiv, slot) {
   div.appendChild(title);
 
   const img = document.createElement("img");
-  img.src = `${entry.id}.jpg`;          // 🔥 main folder, matches CSV id
+  img.src = `${entry.id}.jpg`;
   img.className = "entry-image";
   div.appendChild(img);
 
