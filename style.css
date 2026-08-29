@@ -1,22 +1,28 @@
 #bracket {
   display: flex;
-  gap: 60px;
+  gap: 40px;
   overflow-x: auto;
 }
 
 .round {
-  position: relative;
-  width: 260px;
-  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+}
+
+.round-title {
+  font-weight: bold;
+  margin-bottom: 10px;
+  text-align: center;
 }
 
 .match {
-  position: absolute;
-  width: 240px;
   background: #222;
   padding: 10px;
   border-radius: 6px;
   border: 1px solid #444;
+  width: 240px;
 }
 
 .player {
@@ -25,7 +31,6 @@
   border-radius: 4px;
   margin-bottom: 6px;
   cursor: pointer;
-  position: relative;
   border: 2px solid transparent;
 }
 
@@ -50,12 +55,6 @@
   border-radius: 4px;
 }
 
-.round-title {
-  text-align: center;
-  margin-bottom: 20px;
-  font-weight: bold;
-}
-
 .advance-btn {
   margin-top: 8px;
   padding: 6px;
@@ -71,16 +70,6 @@
   background: #777;
 }
 
-.reset-btn {
-  padding: 10px 20px;
-  background: #a00;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  margin-bottom: 20px;
-}
-
-.reset-btn:hover {
-  background: #c00;
+.spacer {
+  height: 40px;
 }
