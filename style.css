@@ -129,3 +129,10 @@ iframe {
 .reset-btn:hover {
   background: #c00;
 }
+
+.entry-image {
+  width: 100%;
+  height: auto;
+  margin-top: 6px;
+  border-radius: 4px;
+}
