@@ -33,7 +33,7 @@ function startNewTournament(entries) {
   const bracketDiv = document.getElementById("bracket");
 
   const shuffled = shuffle(entries.map((e, i) => ({
-    id: i,
+    id: i + 1,
     ...e,
     status: "none"
   })));
@@ -186,6 +186,12 @@ function renderBracket(rounds, bracketDiv) {
     const winnerDiv = document.createElement("div");
     winnerDiv.className = "player winner";
     winnerDiv.textContent = winnerEntry.name;
+
+    const img = document.createElement("img");
+    img.src = `images/${winnerEntry.id}.jpg`;
+    img.className = "entry-image";
+
+    winnerDiv.appendChild(img);
     winnerRoundDiv.appendChild(winnerDiv);
   }
 
@@ -195,7 +201,15 @@ function renderBracket(rounds, bracketDiv) {
 function createPlayerDiv(entry, matchDiv, slot) {
   const div = document.createElement("div");
   div.className = "player";
-  div.textContent = entry.name;
+
+  const title = document.createElement("div");
+  title.textContent = entry.name;
+  div.appendChild(title);
+
+  const img = document.createElement("img");
+  img.src = `images/${entry.id}.jpg`;
+  img.className = "entry-image";
+  div.appendChild(img);
 
   div.dataset.name = entry.name || "";
   div.dataset.description = entry.description || "";
@@ -204,10 +218,6 @@ function createPlayerDiv(entry, matchDiv, slot) {
 
   if (entry.status === "winner") div.classList.add("winner");
   if (entry.status === "loser") div.classList.add("loser");
-
-  if (entry.status !== "none") {
-    return div;
-  }
 
   const arrow = document.createElement("span");
   arrow.className = "dropdown-arrow";
