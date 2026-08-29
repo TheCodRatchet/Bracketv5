@@ -19,11 +19,9 @@ function initBracket(entries) {
 
   if (saved) {
     CURRENT_ROUNDS = JSON.parse(saved);
-
     buildMatches(CURRENT_ROUNDS);
     const bracketDiv = document.getElementById("bracket");
     renderBracket(CURRENT_ROUNDS, bracketDiv);
-
     setupResetButton();
     return;
   }
@@ -43,7 +41,6 @@ function startNewTournament(entries) {
   const rounds = [];
   let current = shuffled;
 
-  // build until we reach the final (2 entries)
   while (current.length > 2) {
     const nextRoundSize = Math.ceil(current.length / 2);
 
@@ -59,7 +56,6 @@ function startNewTournament(entries) {
     current = nextRound;
   }
 
-  // final round (2 entries)
   rounds.push({ entries: current, next: [] });
 
   CURRENT_ROUNDS = rounds;
@@ -125,7 +121,7 @@ function renderBracket(rounds, bracketDiv) {
 
     const roundTitle = document.createElement("div");
     roundTitle.className = "round-title";
-    roundTitle.textContent = ROUND_NAMES[rIndex] || `Round ${rIndex + 1}`;
+    roundTitle.textContent = ROUND_NAMES[rIndex];
     roundDiv.appendChild(roundTitle);
 
     round.matches.forEach((match, mIndex) => {
@@ -163,7 +159,6 @@ function renderBracket(rounds, bracketDiv) {
           nextRound[mIndex] = { ...winner, status: "none" };
         }
 
-        // when final decided, winner is known
         buildMatches(rounds);
         renderBracket(rounds, bracketDiv);
         saveTournament();
@@ -176,10 +171,8 @@ function renderBracket(rounds, bracketDiv) {
     bracketDiv.appendChild(roundDiv);
   });
 
-  // winner column (after final)
   const finalRound = rounds[rounds.length - 1];
-  const winnerEntry =
-    finalRound.entries.find(e => e.status === "winner") || null;
+  const winnerEntry = finalRound.entries.find(e => e.status === "winner");
 
   const winnerRoundDiv = document.createElement("div");
   winnerRoundDiv.className = "round";
