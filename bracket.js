@@ -171,10 +171,8 @@ function renderBracket(rounds) {
     roundDivs.push(roundDiv);
   });
 
-  // Centering after layout settles (no jump)
-  setTimeout(() => {
-    applyCentering(roundDivs);
-  }, 0);
+  lockMatchHeights(roundDivs);
+  applyCentering(roundDivs);
 
   const finalRound = rounds[rounds.length - 1];
   const winnerEntry = finalRound.entries.find(e => e.status === "winner");
@@ -201,6 +199,16 @@ function renderBracket(rounds) {
   }
 
   bracketDiv.appendChild(winnerRoundDiv);
+}
+
+function lockMatchHeights(roundDivs) {
+  roundDivs.forEach(round => {
+    const matches = [...round.querySelectorAll(".match")];
+    matches.forEach(m => {
+      const h = m.offsetHeight;
+      m.style.height = h + "px";
+    });
+  });
 }
 
 function applyCentering(roundDivs) {
