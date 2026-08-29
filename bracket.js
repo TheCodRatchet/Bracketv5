@@ -110,96 +110,89 @@ function renderBracket(rounds) {
   const bracketDiv = document.getElementById("bracket");
   bracketDiv.innerHTML = "";
 
-  const roundDivs = [];
+  let globalMatchCounter = 1;
 
   rounds.forEach((round, rIndex) => {
     const roundDiv = document.createElement("div");
     roundDiv.className = "round";
 
-    const title = document.createElement("div");
-    title.className = "round-title";
-    title.textContent = ROUND_NAMES[rIndex];
-    roundDiv.appendChild(title);
+    const roundTitle = document.createElement("div");
+    roundTitle.className = "round-title";
+    roundTitle.textContent = ROUND_NAMES[rIndex];
+    roundDiv.appendChild(roundTitle);
 
     round.matches.forEach((match, mIndex) => {
-      const matchDiv = createMatchDiv(match, rIndex, mIndex);
-      roundDiv.appendChild(matchDiv);
+      const matchDiv = document.createElement("div");
+      matchDiv.className = "match";
 
-      if (mIndex < round.matches.length - 1) {
-        const spacer = document.createElement("div");
-        spacer.className = "spacer";
-        roundDiv.appendChild(spacer);
-      }
+      const title = document.createElement("div");
+      title.className = "match-title";
+      title.textContent = `Match ${globalMatchCounter++}`;
+      matchDiv.appendChild(title);
+
+      const p1Div = createPlayerDiv(match.p1, matchDiv, "p1");
+      const p2Div = createPlayerDiv(match.p2, matchDiv, "p2");
+
+      matchDiv.appendChild(p1Div);
+      matchDiv.appendChild(p2Div);
+
+      const btn = document.createElement("button");
+      btn.className = "advance-btn";
+      btn.textContent = "Advance Winner";
+
+      btn.onclick = () => {
+        const selected = matchDiv.querySelector(".player.selected");
+        if (!selected) return;
+
+        const selectedSlot = selected.dataset.slot;
+        const winner = selectedSlot === "p1" ? match.p1 : match.p2;
+        const loser = selectedSlot === "p1" ? match.p2 : match.p1;
+
+        winner.status = "winner";
+        loser.status = "loser";
+
+        const nextRound = rounds[rIndex + 1]?.entries;
+        if (nextRound && nextRound[mIndex]) {
+          nextRound[mIndex] = { ...winner, status: "none" };
+        }
+
+        buildMatches(rounds);
+        renderBracket(rounds);
+        saveTournament();
+      };
+
+      matchDiv.appendChild(btn);
+      roundDiv.appendChild(matchDiv);
     });
 
     bracketDiv.appendChild(roundDiv);
-    roundDivs.push(roundDiv);
   });
 
-  alignRounds(roundDivs);
-}
+  const finalRound = rounds[rounds.length - 1];
+  const winnerEntry = finalRound.entries.find(e => e.status === "winner");
 
-function alignRounds(roundDivs) {
-  for (let r = 1; r < roundDivs.length; r++) {
-    const prevRound = roundDivs[r - 1];
-    const currRound = roundDivs[r];
+  const winnerRoundDiv = document.createElement("div");
+  winnerRoundDiv.className = "round";
 
-    const prevMatches = [...prevRound.querySelectorAll(".match")];
-    const currMatches = [...currRound.querySelectorAll(".match")];
+  const winnerTitle = document.createElement("div");
+  winnerTitle.className = "round-title";
+  winnerTitle.textContent = "Winner";
+  winnerRoundDiv.appendChild(winnerTitle);
 
-    currMatches.forEach((matchDiv, i) => {
-      const parent1 = prevMatches[i * 2];
-      const parent2 = prevMatches[i * 2 + 1];
+  if (winnerEntry) {
+    const winnerDiv = document.createElement("div");
+    winnerDiv.className = "player winner";
+    winnerDiv.textContent = winnerEntry.name;
 
-      const mid = (parent1.offsetTop + parent2.offsetTop) / 2;
+    const img = document.createElement("img");
+    img.src = `${winnerEntry.id}.jpg`;
+    img.className = "entry-image";
 
-      matchDiv.style.marginTop = `${mid - matchDiv.offsetTop}px`;
-    });
+    winnerDiv.appendChild(img);
+    winnerRoundDiv.appendChild(winnerDiv);
   }
-}
 
-function createMatchDiv(match, rIndex, mIndex) {
-  const matchDiv = document.createElement("div");
-  matchDiv.className = "match";
-
-  const title = document.createElement("div");
-  title.className = "match-title";
-  title.textContent = `Match ${rIndex * 1000 + mIndex}`;
-  matchDiv.appendChild(title);
-
-  const p1Div = createPlayerDiv(match.p1, matchDiv, "p1");
-  const p2Div = createPlayerDiv(match.p2, matchDiv, "p2");
-
-  matchDiv.appendChild(p1Div);
-  matchDiv.appendChild(p2Div);
-
-  const btn = document.createElement("button");
-  btn.className = "advance-btn";
-  btn.textContent = "Advance Winner";
-
-  btn.onclick = () => {
-    const selected = matchDiv.querySelector(".player.selected");
-    if (!selected) return;
-
-    const winner = selected.dataset.slot === "p1" ? match.p1 : match.p2;
-    const loser = selected.dataset.slot === "p1" ? match.p2 : match.p1;
-
-    winner.status = "winner";
-    loser.status = "loser";
-
-    const nextRound = CURRENT_ROUNDS[rIndex + 1]?.entries;
-    if (nextRound && nextRound[mIndex]) {
-      nextRound[mIndex] = { ...winner, status: "none" };
-    }
-
-    buildMatches(CURRENT_ROUNDS);
-    renderBracket(CURRENT_ROUNDS);
-    saveTournament();
-  };
-
-  matchDiv.appendChild(btn);
-
-  return matchDiv;
+  bracketDiv.appendChild(winnerRoundDiv);
 }
 
 function createPlayerDiv(entry, matchDiv, slot) {
