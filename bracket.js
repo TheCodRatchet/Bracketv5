@@ -20,8 +20,7 @@ function initBracket(entries) {
   if (saved) {
     CURRENT_ROUNDS = JSON.parse(saved);
     buildMatches(CURRENT_ROUNDS);
-    const bracketDiv = document.getElementById("bracket");
-    renderBracket(CURRENT_ROUNDS, bracketDiv);
+    renderBracket(CURRENT_ROUNDS, document.getElementById("bracket"));
     setupResetButton();
     return;
   }
