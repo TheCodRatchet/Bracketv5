@@ -171,7 +171,10 @@ function renderBracket(rounds) {
     roundDivs.push(roundDiv);
   });
 
-  dynamicCentering(roundDivs);
+  // Centering after layout settles (no jump)
+  setTimeout(() => {
+    applyCentering(roundDivs);
+  }, 0);
 
   const finalRound = rounds[rounds.length - 1];
   const winnerEntry = finalRound.entries.find(e => e.status === "winner");
@@ -198,43 +201,6 @@ function renderBracket(rounds) {
   }
 
   bracketDiv.appendChild(winnerRoundDiv);
-}
-
-function dynamicCentering(roundDivs) {
-  const imgs = document.querySelectorAll("img");
-
-  let loaded = 0;
-  const total = imgs.length;
-
-  const runCentering = () => {
-    requestAnimationFrame(() => {
-      applyCentering(roundDivs);
-      requestAnimationFrame(() => {
-        applyCentering(roundDivs);
-      });
-    });
-  };
-
-  if (total === 0) {
-    runCentering();
-    return;
-  }
-
-  imgs.forEach(img => {
-    if (img.complete) {
-      loaded++;
-      if (loaded === total) runCentering();
-    } else {
-      img.onload = () => {
-        loaded++;
-        if (loaded === total) runCentering();
-      };
-      img.onerror = () => {
-        loaded++;
-        if (loaded === total) runCentering();
-      };
-    }
-  });
 }
 
 function applyCentering(roundDivs) {
@@ -275,6 +241,12 @@ function createPlayerDiv(entry, matchDiv, slot) {
   div.appendChild(img);
 
   div.dataset.slot = slot;
+
+  if (entry.status === "winner") {
+    div.classList.add("winner");
+  } else if (entry.status === "loser") {
+    div.classList.add("loser");
+  }
 
   div.onclick = () => {
     matchDiv.querySelectorAll(".player").forEach(p => p.classList.remove("selected"));
