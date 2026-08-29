@@ -1,0 +1,131 @@
+body {
+  font-family: Arial, sans-serif;
+  background: #111;
+  color: #eee;
+  padding: 20px;
+}
+
+#bracket {
+  display: flex;
+  gap: 30px;
+  overflow-x: auto;
+}
+
+.round {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.round-title {
+  font-weight: bold;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.match {
+  background: #222;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #444;
+  width: 220px;
+}
+
+.match-title {
+  font-weight: bold;
+  margin-bottom: 6px;
+}
+
+.player {
+  background: #333;
+  padding: 6px;
+  border-radius: 4px;
+  margin-bottom: 6px;
+  cursor: pointer;
+  position: relative;
+  border: 2px solid transparent;
+}
+
+.player.selected {
+  border-color: #4af;
+}
+
+.player:hover {
+  background: #444;
+}
+
+.player.winner {
+  background: #0a0;
+  color: #fff;
+}
+
+.player.loser {
+  background: #a00;
+  color: #fff;
+}
+
+.dropdown-arrow {
+  position: absolute;
+  right: 6px;
+  top: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.entry-details {
+  position: absolute;
+  left: 0;
+  top: 100%;
+  width: 1600px;
+  background: #000;
+  padding: 24px;
+  border-radius: 12px;
+  z-index: 999;
+  border: 2px solid #444;
+  box-shadow: 0 0 25px #000;
+}
+
+.entry-details iframe {
+  width: 1600px !important;
+  height: 900px !important;
+  max-width: 100%;
+  display: block;
+  border: none;
+}
+
+iframe {
+  width: 100%;
+  max-width: 220px;
+  height: 140px;
+  border: none;
+}
+
+.advance-btn {
+  margin-top: 8px;
+  padding: 6px;
+  width: 100%;
+  background: #555;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.advance-btn:hover {
+  background: #777;
+}
+
+.reset-btn {
+  padding: 10px 20px;
+  background: #a00;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+
+.reset-btn:hover {
+  background: #c00;
+}
