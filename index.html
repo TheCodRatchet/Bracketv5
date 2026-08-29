@@ -44,7 +44,7 @@
     }
     if (current.trim().length > 0) rows.push(current);
 
-    rows.shift(); // remove header
+    rows.shift();
 
     const entries = rows.map((row, index) => {
       const cols = [];
@@ -73,7 +73,6 @@
       let description = cols[1] || "";
       const url = cols.slice(2).join("").trim();
 
-      // ensure description is split into two lines if single-line studios/genres
       if (description.includes("Studios:") && description.includes("Genres:") && !description.includes("\n")) {
         description = description.replace("Genres:", "\nGenres:");
       }
@@ -87,7 +86,6 @@
       };
     });
 
-    console.log("Loaded entries:", entries.length);
     initBracket(entries);
   }
 
