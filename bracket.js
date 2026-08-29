@@ -207,7 +207,7 @@ function createPlayerDiv(entry, matchDiv, slot) {
   div.appendChild(title);
 
   const img = document.createElement("img");
-  img.src = `images/${entry.id}.jpg`;
+  img.src = `${entry.id}.jpg`;   // ← LOAD FROM MAIN FOLDER
   img.className = "entry-image";
   div.appendChild(img);
 
