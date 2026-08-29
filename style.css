@@ -1,39 +1,22 @@
-body {
-  font-family: Arial, sans-serif;
-  background: #111;
-  color: #eee;
-  padding: 20px;
-}
-
 #bracket {
   display: flex;
-  gap: 30px;
+  gap: 60px;
   overflow-x: auto;
 }
 
 .round {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.round-title {
-  font-weight: bold;
-  margin-bottom: 10px;
-  text-align: center;
+  position: relative;
+  width: 260px;
+  min-height: 100%;
 }
 
 .match {
+  position: absolute;
+  width: 240px;
   background: #222;
   padding: 10px;
   border-radius: 6px;
   border: 1px solid #444;
-  width: 220px;
-}
-
-.match-title {
-  font-weight: bold;
-  margin-bottom: 6px;
 }
 
 .player {
@@ -50,10 +33,6 @@ body {
   border-color: #4af;
 }
 
-.player:hover {
-  background: #444;
-}
-
 .player.winner {
   background: #0a0;
   color: #fff;
@@ -64,41 +43,17 @@ body {
   color: #fff;
 }
 
-.dropdown-arrow {
-  position: absolute;
-  right: 6px;
-  top: 6px;
-  font-size: 16px;
-  cursor: pointer;
-  user-select: none;
-}
-
-.entry-details {
-  position: absolute;
-  left: 0;
-  top: 100%;
-  width: 1600px;
-  background: #000;
-  padding: 24px;
-  border-radius: 12px;
-  z-index: 999;
-  border: 2px solid #444;
-  box-shadow: 0 0 25px #000;
-}
-
-.entry-details iframe {
-  width: 1600px !important;
-  height: 900px !important;
-  max-width: 100%;
-  display: block;
-  border: none;
-}
-
-iframe {
+.entry-image {
   width: 100%;
-  max-width: 220px;
-  height: 140px;
-  border: none;
+  height: auto;
+  margin-top: 6px;
+  border-radius: 4px;
+}
+
+.round-title {
+  text-align: center;
+  margin-bottom: 20px;
+  font-weight: bold;
 }
 
 .advance-btn {
@@ -128,11 +83,4 @@ iframe {
 
 .reset-btn:hover {
   background: #c00;
-}
-
-.entry-image {
-  width: 100%;
-  height: auto;
-  margin-top: 6px;
-  border-radius: 4px;
 }
