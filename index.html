@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Video Bracket</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h1>Single Elimination Bracket</h1>
+
+<button id="resetBtn" class="reset-btn">Reset Tournament</button>
+
+<div id="bracket"></div>
+
+<script src="bracket.js"></script>
+<script>
+  async function loadData() {
+    const res = await fetch("anime.csv");
+    const text = await res.text();
+
+    const cleanText = text.replace(/�/g, "");
+
+    const rows = [];
+    let current = "";
+    let insideQuotes = false;
+
+    for (let i = 0; i < cleanText.length; i++) {
+      const c = cleanText[i];
+
+      if (c === '"') {
+        insideQuotes = !insideQuotes;
+        current += c;
+        continue;
+      }
+
+      if (c === "\n" && !insideQuotes) {
+        rows.push(current);
+        current = "";
+        continue;
+      }
+
+      current += c;
+    }
+    if (current.trim().length > 0) rows.push(current);
+
+    rows.shift(); // remove header
+
+    const entries = rows.map((row, index) => {
+      const cols = [];
+      let col = "";
+      let q = false;
+
+      for (let i = 0; i < row.length; i++) {
+        const c = row[i];
+
+        if (c === '"') {
+          q = !q;
+          continue;
+        }
+
+        if (c === "," && !q) {
+          cols.push(col.trim());
+          col = "";
+          continue;
+        }
+
+        col += c;
+      }
+      cols.push(col.trim());
+
+      const title = cols[0] || "Unknown";
+      let description = cols[1] || "";
+      const url = cols.slice(2).join("").trim();
+
+      // ensure description is split into two lines if single-line studios/genres
+      if (description.includes("Studios:") && description.includes("Genres:") && !description.includes("\n")) {
+        description = description.replace("Genres:", "\nGenres:");
+      }
+
+      return {
+        id: index,
+        name: title,
+        description: description,
+        youtube: url,
+        status: "none"
+      };
+    });
+
+    console.log("Loaded entries:", entries.length);
+    initBracket(entries);
+  }
+
+  loadData();
+</script>
+
+</body>
+</html>
