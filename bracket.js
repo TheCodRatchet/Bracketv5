@@ -171,7 +171,7 @@ function renderBracket(rounds) {
     roundDivs.push(roundDiv);
   });
 
-  waitForImagesThenCenter(roundDivs);
+  dynamicCentering(roundDivs);
 
   const finalRound = rounds[rounds.length - 1];
   const winnerEntry = finalRound.entries.find(e => e.status === "winner");
@@ -200,29 +200,38 @@ function renderBracket(rounds) {
   bracketDiv.appendChild(winnerRoundDiv);
 }
 
-function waitForImagesThenCenter(roundDivs) {
+function dynamicCentering(roundDivs) {
   const imgs = document.querySelectorAll("img");
 
   let loaded = 0;
   const total = imgs.length;
 
+  const runCentering = () => {
+    requestAnimationFrame(() => {
+      applyCentering(roundDivs);
+      requestAnimationFrame(() => {
+        applyCentering(roundDivs);
+      });
+    });
+  };
+
   if (total === 0) {
-    applyCentering(roundDivs);
+    runCentering();
     return;
   }
 
   imgs.forEach(img => {
     if (img.complete) {
       loaded++;
-      if (loaded === total) applyCentering(roundDivs);
+      if (loaded === total) runCentering();
     } else {
       img.onload = () => {
         loaded++;
-        if (loaded === total) applyCentering(roundDivs);
+        if (loaded === total) runCentering();
       };
       img.onerror = () => {
         loaded++;
-        if (loaded === total) applyCentering(roundDivs);
+        if (loaded === total) runCentering();
       };
     }
   });
