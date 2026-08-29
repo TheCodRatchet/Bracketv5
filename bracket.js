@@ -111,6 +111,7 @@ function renderBracket(rounds) {
   bracketDiv.innerHTML = "";
 
   let globalMatchCounter = 1;
+  const roundDivs = [];
 
   rounds.forEach((round, rIndex) => {
     const roundDiv = document.createElement("div");
@@ -124,6 +125,7 @@ function renderBracket(rounds) {
     round.matches.forEach((match, mIndex) => {
       const matchDiv = document.createElement("div");
       matchDiv.className = "match";
+      matchDiv.dataset.matchIndex = mIndex;
 
       const title = document.createElement("div");
       title.className = "match-title";
@@ -166,7 +168,10 @@ function renderBracket(rounds) {
     });
 
     bracketDiv.appendChild(roundDiv);
+    roundDivs.push(roundDiv);
   });
+
+  applyCentering(roundDivs);
 
   const finalRound = rounds[rounds.length - 1];
   const winnerEntry = finalRound.entries.find(e => e.status === "winner");
@@ -193,6 +198,30 @@ function renderBracket(rounds) {
   }
 
   bracketDiv.appendChild(winnerRoundDiv);
+}
+
+function applyCentering(roundDivs) {
+  for (let r = 1; r < roundDivs.length; r++) {
+    const prevRound = roundDivs[r - 1];
+    const currRound = roundDivs[r];
+
+    const prevMatches = [...prevRound.querySelectorAll(".match")];
+    const currMatches = [...currRound.querySelectorAll(".match")];
+
+    currMatches.forEach((matchDiv, i) => {
+      const parent1 = prevMatches[i * 2];
+      const parent2 = prevMatches[i * 2 + 1];
+
+      if (!parent1 || !parent2) return;
+
+      const mid = (parent1.offsetTop + parent2.offsetTop) / 2;
+      const currentTop = matchDiv.offsetTop;
+
+      const offset = mid - currentTop;
+
+      matchDiv.style.marginTop = `${offset}px`;
+    });
+  }
 }
 
 function createPlayerDiv(entry, matchDiv, slot) {
