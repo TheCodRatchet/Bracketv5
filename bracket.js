@@ -106,6 +106,22 @@ function buildMatches(rounds) {
   });
 }
 
+function resizeRounds(roundDivs) {
+  roundDivs.forEach(round => {
+    const matches = [...round.querySelectorAll(".match")];
+    if (matches.length === 0) return;
+
+    let maxBottom = 0;
+
+    matches.forEach(m => {
+      const bottom = m.offsetTop + m.offsetHeight;
+      if (bottom > maxBottom) maxBottom = bottom;
+    });
+
+    round.style.height = (maxBottom + 40) + "px";
+  });
+}
+
 function renderBracket(rounds, bracketDiv) {
   bracketDiv.innerHTML = "";
 
@@ -172,6 +188,7 @@ function renderBracket(rounds, bracketDiv) {
   });
 
   alignMatches(roundDivs);
+  resizeRounds(roundDivs);
 
   const finalRound = rounds[rounds.length - 1];
   const winnerEntry = finalRound.entries.find(e => e.status === "winner");
