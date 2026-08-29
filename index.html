@@ -44,7 +44,7 @@
     }
     if (current.trim().length > 0) rows.push(current);
 
-    rows.shift();
+    rows.shift(); // remove header
 
     const entries = rows.map((row, index) => {
       const cols = [];
@@ -78,7 +78,7 @@
       }
 
       return {
-        id: index,
+        id: index + 1,          // 🔥 1-based ID → 1.jpg, 2.jpg, ...
         name: title,
         description: description,
         youtube: url,
